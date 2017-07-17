@@ -1,2 +1,6 @@
 # android-toolchain
-Toolchain i used to compile kernel for android devices.
+This is the toolchain for aarch64 devices
+
+SDK = 22
+
+
