@@ -1,105 +1,138 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/*	$NetBSD: elf_machdep.h,v 1.10 2012/08/05 04:12:46 matt Exp $	*/
 
-#ifndef _AARCH64_ELF_MACHDEP_H_
-#define _AARCH64_ELF_MACHDEP_H_
+#ifndef _ARM_ELF_MACHDEP_H_
+#define _ARM_ELF_MACHDEP_H_
 
-#if defined(__AARCH64EB__)
-#define ELF64_MACHDEP_ENDIANNESS    ELFDATA2MSB
+#if defined(__ARMEB__)
+#define ELF32_MACHDEP_ENDIANNESS	ELFDATA2MSB
 #else
-#define ELF64_MACHDEP_ENDIANNESS    ELFDATA2LSB
+#define ELF32_MACHDEP_ENDIANNESS	ELFDATA2LSB
 #endif
 
-#define ELF64_MACHDEP_ID_CASES                      \
-    case EM_AARCH64:                                \
-        break;
+#define ELF64_MACHDEP_ENDIANNESS	XXX	/* break compilation */
+#define ELF64_MACHDEP_ID_CASES                                          \
+		/* no 64-bit ELF machine types supported */
 
-#define ELF64_MACHDEP_ID    EM_AARCH64
+/* Processor specific flags for the ELF header e_flags field.  */
+#define EF_ARM_RELEXEC		0x00000001
+#define EF_ARM_HASENTRY		0x00000002
+#define EF_ARM_INTERWORK	0x00000004 /* GNU binutils 000413 */
+#define EF_ARM_SYMSARESORTED	0x00000004 /* ARM ELF A08 */
+#define EF_ARM_APCS_26		0x00000008 /* GNU binutils 000413 */
+#define EF_ARM_DYNSYMSUSESEGIDX	0x00000008 /* ARM ELF B01 */
+#define EF_ARM_APCS_FLOAT	0x00000010 /* GNU binutils 000413 */
+#define EF_ARM_MAPSYMSFIRST	0x00000010 /* ARM ELF B01 */
+#define EF_ARM_PIC		0x00000020
+#define EF_ARM_ALIGN8		0x00000040 /* 8-bit structure alignment.  */
+#define EF_ARM_NEW_ABI		0x00000080
+#define EF_ARM_OLD_ABI		0x00000100
+#define EF_ARM_SOFT_FLOAT	0x00000200
+#define EF_ARM_EABIMASK		0xff000000
+#define	EF_ARM_EABI_VER1	0x01000000
+#define	EF_ARM_EABI_VER2	0x02000000
+#define	EF_ARM_EABI_VER3	0x03000000
+#define	EF_ARM_EABI_VER4	0x04000000
+#define	EF_ARM_EABI_VER5	0x05000000
 
-#define ARCH_ELFSIZE        64  /* MD native binary size */
+#define	ELF32_MACHDEP_ID_CASES						\
+		case EM_ARM:						\
+			break;
 
-/* Null relocations */
-#define R_ARM_NONE                      0
-#define R_AARCH64_NONE                  256
+#define	ELF32_MACHDEP_ID	EM_ARM
 
-/* Static Data relocations */
-#define R_AARCH64_ABS64                 257
-#define R_AARCH64_ABS32                 258
-#define R_AARCH64_ABS16                 259
-#define R_AARCH64_PREL64                260
-#define R_AARCH64_PREL32                261
-#define R_AARCH64_PREL16                262
+#define ARCH_ELFSIZE		32	/* MD native binary size */
 
-#define R_AARCH64_MOVW_UABS_G0          263
-#define R_AARCH64_MOVW_UABS_G0_NC       264
-#define R_AARCH64_MOVW_UABS_G1          265
-#define R_AARCH64_MOVW_UABS_G1_NC       266
-#define R_AARCH64_MOVW_UABS_G2          267
-#define R_AARCH64_MOVW_UABS_G2_NC       268
-#define R_AARCH64_MOVW_UABS_G3          269
-#define R_AARCH64_MOVW_SABS_G0          270
-#define R_AARCH64_MOVW_SABS_G1          271
-#define R_AARCH64_MOVW_SABS_G2          272
+/* Processor specific relocation types */
 
-/* PC-relative addresses */
-#define R_AARCH64_LD_PREL_LO19          273
-#define R_AARCH64_ADR_PREL_LO21         274
-#define R_AARCH64_ADR_PREL_PG_HI21      275
-#define R_AARCH64_ADR_PREL_PG_HI21_NC   276
-#define R_AARCH64_ADD_ABS_LO12_NC       277
-#define R_AARCH64_LDST8_ABS_LO12_NC     278
+#define R_ARM_NONE		0
+#define R_ARM_PC24		1
+#define R_ARM_ABS32		2
+#define R_ARM_REL32		3
+#define R_ARM_PC13		4
+#define R_ARM_ABS16		5
+#define R_ARM_ABS12		6
+#define R_ARM_THM_ABS5		7
+#define R_ARM_ABS8		8
+#define R_ARM_SBREL32		9
+#define R_ARM_THM_PC22		10
+#define R_ARM_THM_PC8		11
+#define R_ARM_AMP_VCALL9	12
+#define R_ARM_SWI24		13
+#define R_ARM_THM_SWI8		14
+#define R_ARM_XPC25		15
+#define R_ARM_THM_XPC22		16
 
-/* Control-flow relocations */
-#define R_AARCH64_TSTBR14               279
-#define R_AARCH64_CONDBR19              280
-#define R_AARCH64_JUMP26                282
-#define R_AARCH64_CALL26                283
-#define R_AARCH64_LDST16_ABS_LO12_NC    284
-#define R_AARCH64_LDST32_ABS_LO12_NC    285
-#define R_AARCH64_LDST64_ABS_LO12_NC    286
-#define R_AARCH64_LDST128_ABS_LO12_NC   299
+/* TLS relocations */
+#define R_ARM_TLS_DTPMOD32	17	/* ID of module containing symbol */
+#define R_ARM_TLS_DTPOFF32	18	/* Offset in TLS block */
+#define R_ARM_TLS_TPOFF32	19	/* Offset in static TLS block */
 
-#define R_AARCH64_MOVW_PREL_G0          287
-#define R_AARCH64_MOVW_PREL_G0_NC       288
-#define R_AARCH64_MOVW_PREL_G1          289
-#define R_AARCH64_MOVW_PREL_G1_NC       290
-#define R_AARCH64_MOVW_PREL_G2          291
-#define R_AARCH64_MOVW_PREL_G2_NC       292
-#define R_AARCH64_MOVW_PREL_G3          293
+/* 20-31 are reserved for ARM Linux. */
+#define R_ARM_COPY		20
+#define R_ARM_GLOB_DAT		21
+#define	R_ARM_JUMP_SLOT		22
+#define R_ARM_RELATIVE		23
+#define	R_ARM_GOTOFF		24
+#define R_ARM_GOTPC		25
+#define R_ARM_GOT32		26
+#define R_ARM_PLT32		27
 
-/* Dynamic relocations */
-#define R_AARCH64_COPY                  1024
-#define R_AARCH64_GLOB_DAT              1025    /* Create GOT entry.  */
-#define R_AARCH64_JUMP_SLOT             1026    /* Create PLT entry.  */
-#define R_AARCH64_RELATIVE              1027    /* Adjust by program base.  */
-#define R_AARCH64_TLS_TPREL64           1030
-#define R_AARCH64_TLS_DTPREL32          1031
+#define R_ARM_ALU_PCREL_7_0	32
+#define R_ARM_ALU_PCREL_15_8	33
+#define R_ARM_ALU_PCREL_23_15	34
+#define R_ARM_ALU_SBREL_11_0	35
+#define R_ARM_ALU_SBREL_19_12	36
+#define R_ARM_ALU_SBREL_27_20	37
 
-#define R_TYPE(name)        __CONCAT(R_AARCH64_,name)
+/* 96-111 are reserved to G++. */
+#define R_ARM_GNU_VTENTRY	100
+#define R_ARM_GNU_VTINHERIT	101
+#define R_ARM_THM_PC11		102
+#define R_ARM_THM_PC9		103
 
-#endif /* _AARCH64_ELF_MACHDEP_H_ */
+/* More TLS relocations */
+#define R_ARM_TLS_GD32		104	/* PC-rel 32 bit for global dynamic */
+#define R_ARM_TLS_LDM32		105	/* PC-rel 32 bit for local dynamic */
+#define R_ARM_TLS_LDO32		106	/* 32 bit offset relative to TLS */
+#define R_ARM_TLS_IE32		107	/* PC-rel 32 bit for GOT entry of */
+#define R_ARM_TLS_LE32		108
+#define R_ARM_TLS_LDO12		109
+#define R_ARM_TLS_LE12		110
+#define R_ARM_TLS_IE12GP	111
+
+/* 112-127 are reserved for private experiments. */
+
+#define R_ARM_RXPC25		249
+#define R_ARM_RSBREL32		250
+#define R_ARM_THM_RPC22		251
+#define R_ARM_RREL32		252
+#define R_ARM_RABS32		253
+#define R_ARM_RPC24		254
+#define R_ARM_RBASE		255
+
+#define R_TYPE(name)		__CONCAT(R_ARM_,name)
+
+/* Processor specific program header flags */
+#define PF_ARM_SB		0x10000000
+#define PF_ARM_PI		0x20000000
+#define PF_ARM_ENTRY		0x80000000
+
+/* Processor specific section header flags */
+#define SHF_ENTRYSECT		0x10000000
+#define SHF_COMDEF		0x80000000
+
+/* Processor specific symbol types */
+#define STT_ARM_TFUNC		STT_LOPROC
+
+#ifdef _KERNEL
+#ifdef ELFSIZE
+#define	ELF_MD_PROBE_FUNC	ELFNAME2(arm_netbsd,probe)
+#endif
+
+struct exec_package;
+
+int arm_netbsd_elf32_probe(struct lwp *, struct exec_package *, void *, char *,
+	vaddr_t *);
+#endif
+
+#endif /* _ARM_ELF_MACHDEP_H_ */

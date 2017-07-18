@@ -16,13 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __ASM_BYTEORDER_H
-#define __ASM_BYTEORDER_H
-#ifdef __AARCH64EB__
-#include <linux/byteorder/big_endian.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#else
+#ifndef __ASM_ARM_BYTEORDER_H
+#define __ASM_ARM_BYTEORDER_H
 #include <linux/byteorder/little_endian.h>
-#endif
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

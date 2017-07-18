@@ -35,15 +35,20 @@
  *	from: @(#)asm.h	5.5 (Berkeley) 5/7/91
  */
 
-#ifndef _AARCH64_ASM_H_
-#define _AARCH64_ASM_H_
+#ifndef _ARM32_ASM_H_
+#define _ARM32_ASM_H_
 
 #ifndef _ALIGN_TEXT
 # define _ALIGN_TEXT .align 0
 #endif
 
+#undef __bionic_asm_custom_entry
+#undef __bionic_asm_custom_end
+#define __bionic_asm_custom_entry(f) .fnstart
+#define __bionic_asm_custom_end(f) .fnend
+
 #undef __bionic_asm_function_type
-#define __bionic_asm_function_type %function
+#define __bionic_asm_function_type #function
 
 #if defined(__ELF__) && defined(PIC)
 #define PIC_SYM(x,y) x ## ( ## y ## )
@@ -51,4 +56,4 @@
 #define PIC_SYM(x,y) x
 #endif
 
-#endif /* _AARCH64_ASM_H_ */
+#endif /* !_ARM_ASM_H_ */

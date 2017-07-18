@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,44 +30,53 @@
  * machine/setjmp.h: machine dependent setjmp-related information.
  */
 
-/* _JBLEN is the size of a jmp_buf in longs(64bit on AArch64) */
-#define _JBLEN 32
+/* _JBLEN is the size of a jmp_buf in longs.
+ * Do not modify this value or you will break the ABI !
+ *
+ * This value comes from the original OpenBSD ARM-specific header
+ * that was replaced by this one.
+ */
+#define _JBLEN  64
 
-/* According to AARCH64 PCS document we need to save the following
- * registers:
+/* According to the ARM AAPCS document, we only need to save
+ * the following registers:
  *
- * Core     x19 - x30, sp (see section 5.1.1)
- * VFP      d8 - d15 (see section 5.1.2)
+ *  Core   r4-r14
  *
- * NOTE: All the registers saved here will have 64bit vales (except FPSR).
- *       AAPCS mandates that the higher part of q registers does not need to
- *       be saveved by the callee.
+ *  VFP    d8-d15  (see section 5.1.2.1)
+ *
+ *      Registers s16-s31 (d8-d15, q4-q7) must be preserved across subroutine
+ *      calls; registers s0-s15 (d0-d7, q0-q3) do not need to be preserved
+ *      (and can be used for passing arguments or returning results in standard
+ *      procedure-call variants). Registers d16-d31 (q8-q15), if present, do
+ *      not need to be preserved.
+ *
+ *  FPSCR  saved because GLibc does saves it too.
+ *
  */
 
-/* The structure of jmp_buf for AArch64:
+/* The internal structure of a jmp_buf is totally private.
+ * Current layout (may change in the future):
  *
- * NOTE: _JBLEN is the size of jmp_buf in longs(64bit on AArch64)! The table
- *      below computes the offsets in words(32bit).
+ * word   name         description
+ * 0      magic        magic number
+ * 1      sigmask      signal mask (not used with _setjmp / _longjmp)
+ * 2      float_base   base of float registers (d8 to d15)
+ * 18     float_state  floating-point status and control register
+ * 19     core_base    base of core registers (r4 to r14)
+ * 30     reserved     reserved entries (room to grow)
+ * 64
  *
- *  word        name            description
- *  0       magic           magic number
- *  1       sigmask         signal mask (not used with _setjmp / _longjmp)
- *  2       core_base       base of core registers (x19-x30, sp)
- *  28      float_base      base of float registers (d8-d15)
- *  44      reserved        reserved entries (room to grow)
- *  64
- *
- *
- *  NOTE: The instructions that load/store core/vfp registers expect 8-byte
- *        alignment. Contrary to the previous setjmp header for ARM we do not
- *        need to save status/control registers for VFP (it is not a
- *        requirement for setjmp).
+ * NOTE: float_base must be at an even word index, since the
+ *       FP registers will be loaded/stored with instructions
+ *       that expect 8-byte alignment.
  */
 
 #define _JB_MAGIC       0
 #define _JB_SIGMASK     (_JB_MAGIC+1)
-#define _JB_CORE_BASE   (_JB_SIGMASK+1)
-#define _JB_FLOAT_BASE  (_JB_CORE_BASE + (31-19+1)*2)
+#define _JB_FLOAT_BASE  (_JB_SIGMASK+1)
+#define _JB_FLOAT_STATE (_JB_FLOAT_BASE + (15-8+1)*2)
+#define _JB_CORE_BASE   (_JB_FLOAT_STATE+1)
 
-#define _JB_MAGIC__SETJMP   0x53657200
-#define _JB_MAGIC_SETJMP    0x53657201
+#define _JB_MAGIC__SETJMP	0x4278f500
+#define _JB_MAGIC_SETJMP	0x4278f501

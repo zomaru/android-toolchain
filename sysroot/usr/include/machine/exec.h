@@ -28,23 +28,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _AARCH64_EXEC_H_
-#define _AARCH64_EXEC_H_
+#ifndef _ARM_EXEC_H_
+#define _ARM_EXEC_H_
 
-#define	__LDPGSZ		4096
+#define __LDPGSZ	4096
 
-#define	NATIVE_EXEC_ELF
+#define NATIVE_EXEC_ELF
 
-#define	ARCH_ELFSIZE		64
+#define ARCH_ELFSIZE		32
 
-#define	ELF_TARG_CLASS		ELFCLASS64		/* 64-bit objects */
-#define	ELF_TARG_DATA		ELFDATA2LSB
-#define	ELF_TARG_MACH		EM_AARCH64
+#define ELF_TARG_CLASS		ELFCLASS32
+#define ELF_TARG_DATA		ELFDATA2LSB
+#define ELF_TARG_MACH		EM_ARM
 
-#define	_NLIST_DO_AOUT
-#define	_NLIST_DO_ELF
+#define _NLIST_DO_AOUT
+#define _NLIST_DO_ELF
 
-#define	_KERN_DO_AOUT
-#define	_KERN_DO_ELF64
+#define _KERN_DO_AOUT
+#define _KERN_DO_ELF
 
-#endif  /* _AARCH64_EXEC_H_ */
+#endif  /* _ARM_EXEC_H_ */

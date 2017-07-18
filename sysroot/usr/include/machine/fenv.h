@@ -27,58 +27,20 @@
  */
 
 /*
- * In ARMv8, AArch64 state, floating-point operation is controlled by:
+ * Rewritten for Android.
  *
- *  * FPCR - 32Bit Floating-Point Control Register:
- *      * [31:27] - Reserved, Res0;
- *      * [26]    - AHP, Alternative half-precision control bit;
- *      * [25]    - DN, Default NaN mode control bit;
- *      * [24]    - FZ, Flush-to-zero mode control bit;
- *      * [23:22] - RMode, Rounding Mode control field:
- *            * 00  - Round to Nearest (RN) mode;
- *            * 01  - Round towards Plus Infinity (RP) mode;
- *            * 10  - Round towards Minus Infinity (RM) mode;
- *            * 11  - Round towards Zero (RZ) mode.
- *      * [21:20] - Stride, ignored during AArch64 execution;
- *      * [19]    - Reserved, Res0;
- *      * [18:16] - Len, ignored during AArch64 execution;
- *      * [15]    - IDE, Input Denormal exception trap;
- *      * [14:13] - Reserved, Res0;
- *      * [12]    - IXE, Inexact exception trap;
- *      * [11]    - UFE, Underflow exception trap;
- *      * [10]    - OFE, Overflow exception trap;
- *      * [9]     - DZE, Division by Zero exception;
- *      * [8]     - IOE, Invalid Operation exception;
- *      * [7:0]   - Reserved, Res0.
- *
- *  * FPSR - 32Bit Floating-Point Status Register:
- *      * [31]    - N, Negative condition flag for AArch32 (AArch64 sets PSTATE.N);
- *      * [30]    - Z, Zero condition flag for AArch32 (AArch64 sets PSTATE.Z);
- *      * [29]    - C, Carry conditon flag for AArch32 (AArch64 sets PSTATE.C);
- *      * [28]    - V, Overflow conditon flag for AArch32 (AArch64 sets PSTATE.V);
- *      * [27]    - QC, Cumulative saturation bit, Advanced SIMD only;
- *      * [26:8]  - Reserved, Res0;
- *      * [7]     - IDC, Input Denormal cumulative exception;
- *      * [6:5]   - Reserved, Res0;
- *      * [4]     - IXC, Inexact cumulative exception;
- *      * [3]     - UFC, Underflow cumulative exception;
- *      * [2]     - OFC, Overflow cumulative exception;
- *      * [1]     - DZC, Division by Zero cumulative exception;
- *      * [0]     - IOC, Invalid Operation cumulative exception.
+ * The ARM FPSCR is described here:
+ * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0344b/Chdfafia.html
  */
 
-#ifndef _ARM64_FENV_H_
-#define _ARM64_FENV_H_
+#ifndef _ARM_FENV_H_
+#define _ARM_FENV_H_
 
 #include <sys/types.h>
 
 __BEGIN_DECLS
 
-typedef struct {
-  __uint32_t __control;     /* FPCR, Floating-point Control Register */
-  __uint32_t __status;      /* FPSR, Floating-point Status Register */
-} fenv_t;
-
+typedef __uint32_t fenv_t;
 typedef __uint32_t fexcept_t;
 
 /* Exception flags. */
@@ -87,9 +49,8 @@ typedef __uint32_t fexcept_t;
 #define FE_OVERFLOW   0x04
 #define FE_UNDERFLOW  0x08
 #define FE_INEXACT    0x10
-#define FE_DENORMAL   0x80
 #define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \
-                       FE_OVERFLOW | FE_UNDERFLOW | FE_DENORMAL)
+                       FE_OVERFLOW | FE_UNDERFLOW)
 
 /* Rounding modes. */
 #define FE_TONEAREST  0x0
@@ -99,4 +60,4 @@ typedef __uint32_t fexcept_t;
 
 __END_DECLS
 
-#endif /* !_ARM64_FENV_H_ */
+#endif /* !_ARM_FENV_H_ */
